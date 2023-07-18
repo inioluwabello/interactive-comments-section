@@ -1,10 +1,10 @@
 /* Components */
-import { Counter } from './components/Counter/Counter'
+import Comments from './components/Comments/Comments'
 
 export default function IndexPage() {
-  return <Counter />
+  return <Comments />
 }
 
 export const metadata = {
-  title: 'Redux Toolkit',
+  title: 'Interactive Comments Section',
 }

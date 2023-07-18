@@ -1,6 +1,7 @@
 /* Instruments */
-import { counterSlice } from './slices'
+import { commentSlice, userSlice } from './slices'
 
 export const reducer = {
-  counter: counterSlice.reducer,
+  comment: commentSlice.reducer,
+  user: userSlice.reducer
 }
