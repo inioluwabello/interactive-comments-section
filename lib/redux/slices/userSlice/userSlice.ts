@@ -3,7 +3,13 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 /* Instruments */
 const initialState: UserSliceState = {
-  currentUser: null,
+  currentUser: {
+    image: { 
+      png: "./images/avatars/image-juliusomo.png",
+      webp: "./images/avatars/image-juliusomo.webp"
+    },
+    username: "juliusomo"
+  },
   status: 'idle',
 }
 
@@ -14,15 +20,12 @@ export const userSlice = createSlice({
     setCurrentUser: (state, action: PayloadAction<IUser>) => {
       state.currentUser = action.payload
     },
-    // decrementScore: (state, action: PayloadAction<number>) => {
-      
-    // }
   }
 })
 
 /* Types */
 export interface UserSliceState {
-  currentUser: IUser | null,
+  currentUser?: IUser,
   status: 'idle' | 'loading' | 'failed'
 }
 

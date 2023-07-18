@@ -1,9 +1,9 @@
-import { IComment, IUser, commentSlice, useDispatch } from "@/lib/redux";
+import {IComment, IUser, commentSlice, useDispatch } from "@/lib/redux";
 import VoteComponent from "./VoteComponent"
 
 interface CommentItemProp {
     comment: IComment
-    currentUser: IUser | null
+    currentUser?: IUser
 }
 
 const CommentItem = ({ comment, currentUser }: CommentItemProp) => {
@@ -58,11 +58,11 @@ const CommentItem = ({ comment, currentUser }: CommentItemProp) => {
                 </div>
             </div>
 
-            <div className="reply-box">
+            {comment.replies && <div className="reply-box">
                 {comment.replies.map((reply: IComment) => {
                     return <CommentItem key={reply.id} comment={reply} currentUser={currentUser} />
                 })}
-            </div>
+            </div>}
         </>
     )
 }

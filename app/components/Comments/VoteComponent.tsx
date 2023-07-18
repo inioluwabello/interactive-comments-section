@@ -2,7 +2,7 @@ import { commentSlice, useDispatch } from "@/lib/redux";
 
 interface VoteComponentProps {
     votes: number,
-    commentId: number
+    commentId: string
 }
 
 const VoteComponent = ({ votes, commentId }: VoteComponentProps) => {
