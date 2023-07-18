@@ -2,12 +2,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 /* Instruments */
-
-const initialData = await (await fetch('../../../../public/data/data.json')).json();
-console.log(initialData)
-
 const initialState: UserSliceState = {
-  currentUser: initialData.currentUser ?? [],
+  currentUser: null,
   status: 'idle',
 }
 
@@ -15,9 +11,9 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    // incrementScore: (state, action: PayloadAction<number>) => {
-      
-    // },
+    setCurrentUser: (state, action: PayloadAction<IUser>) => {
+      state.currentUser = action.payload
+    },
     // decrementScore: (state, action: PayloadAction<number>) => {
       
     // }
@@ -26,7 +22,7 @@ export const userSlice = createSlice({
 
 /* Types */
 export interface UserSliceState {
-  currentUser: IUser,
+  currentUser: IUser | null,
   status: 'idle' | 'loading' | 'failed'
 }
 

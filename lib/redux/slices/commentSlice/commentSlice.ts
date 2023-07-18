@@ -3,13 +3,10 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 /* Instruments */
 import { incrementAsync } from './thunks'
-import { IUser } from '../..';
-
-const initialData = await (await fetch('../../../../public/data/data.json')).json();
-console.log(initialData)
+import { IUser } from '../..'
 
 const initialState: CommentSliceState = {
-  comments: initialData.comments ?? [],
+  comments: [],
   status: 'idle',
 }
 
@@ -17,6 +14,9 @@ export const commentSlice = createSlice({
   name: 'comment',
   initialState,
   reducers: {
+    setComments: (state, action: PayloadAction<IComment[]>) => {
+      state.comments = action.payload
+    },
     incrementScore: (state, action: PayloadAction<number>) => {
       
     },

@@ -1,8 +1,8 @@
 /* Instruments */
 import { createAppAsyncThunk } from '@/lib/redux/createAppAsyncThunk'
 import { fetchIdentityCount } from './fetchIdentityCount'
-import { selectCount } from './selectors'
-import { counterSlice } from './commentSlice'
+import { selectComments } from './selectors'
+import { commentSlice } from './commentSlice'
 import type { ReduxThunkAction } from '@/lib/redux'
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -11,7 +11,7 @@ import type { ReduxThunkAction } from '@/lib/redux'
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
 export const incrementAsync = createAppAsyncThunk(
-  'counter/fetchIdentityCount',
+  'comment/fetchIdentityCount',
   async (amount: number) => {
     const response = await fetchIdentityCount(amount)
 
@@ -25,9 +25,9 @@ export const incrementAsync = createAppAsyncThunk(
 export const incrementIfOddAsync =
   (amount: number): ReduxThunkAction =>
   (dispatch, getState) => {
-    const currentValue = selectCount(getState())
+    const currentValue = selectComments(getState())
 
-    if (currentValue % 2 === 1) {
-      dispatch(counterSlice.actions.incrementByAmount(amount))
-    }
+    // if (currentValue % 2 === 1) {
+      dispatch(commentSlice.actions.decrementScore(amount))
+    // }
   }

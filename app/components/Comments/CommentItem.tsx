@@ -3,7 +3,7 @@ import VoteComponent from "./VoteComponent"
 
 interface CommentItemProp {
     comment: IComment
-    currentUser: IUser
+    currentUser: IUser | null
 }
 
 const CommentItem = ({ comment, currentUser }: CommentItemProp) => {
@@ -22,7 +22,7 @@ const CommentItem = ({ comment, currentUser }: CommentItemProp) => {
                                 <div className="flex">
                                     <img src={comment.user.image.png} alt="user" className="user-image" />
                                     <div className="username">{comment.user.username}</div>
-                                    {comment.user.username === currentUser.username &&
+                                    {currentUser && comment.user.username === currentUser.username &&
                                         <div className="author">you</div>
                                     }
                                     <div className="time">{comment.createdAt}</div>
@@ -30,14 +30,14 @@ const CommentItem = ({ comment, currentUser }: CommentItemProp) => {
                             </div>
 
                             <div className="comment-actions">
-                                {comment.user.username !== currentUser.username && 
+                                {currentUser && comment.user.username !== currentUser.username && 
                                 <a className="reply-btn" onClick={() => { dispatch(commentSlice.actions.reply(comment.id)) }}>
                                     <img src="/images/icon-reply.svg" alt="reply" />
                                     Reply
                                 </a>
                                 }
                                 
-                                {comment.user.username === currentUser.username && 
+                                {currentUser && comment.user.username === currentUser.username && 
                                 <div className="crud-actions">
                                     <a className="delete-btn" onClick={() => { dispatch(commentSlice.actions.delete(comment.id)) }}>
                                         <img src="/images/icon-delete.svg" alt="reply" />
