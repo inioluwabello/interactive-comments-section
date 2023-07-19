@@ -259,4 +259,10 @@ main.main {
     margin-right: unset;
     margin-left: unset;
   }
+  .mt-1 {
+    margin-top: 1em;
+  }
+}
+.text-right {
+  text-align: right;
 }

@@ -98,7 +98,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                         </div>
 
                         {!editing && <div className="content">{comment.content}</div>}
-                        {editing && <div className="edit-box space-between">
+                        {editing && <div className="desktop edit-box space-between">
                             <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
                             <button className="btnn pry-bg" 
                                 onClick={() => { 
@@ -113,6 +113,25 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                                     }));
                                     setEditing(false) 
                                 }}>UPDATE</button>
+                        </div>}
+
+                        {editing && <div className="mobile edit-box">
+                            <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
+                            <div className="text-right mt-1">
+                                <button className="btnn pry-bg" 
+                                    onClick={() => { 
+                                        dispatch(commentSlice.actions.update({
+                                            content: editValue,
+                                            createdAt: comment.createdAt,
+                                            id: comment.id,
+                                            score: comment.score,
+                                            user: comment.user,
+                                            replies: comment.replies,
+                                            replyingTo: comment.replyingTo
+                                        }));
+                                        setEditing(false) 
+                                    }}>UPDATE</button>
+                            </div>
                         </div>}
                     </div>
                 </div>
@@ -134,7 +153,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                                 </a>
                             }
 
-                            {currentUser && comment.user.username === currentUser.username &&
+                            {!editing && currentUser && comment.user.username === currentUser.username &&
                                 <div className="crud-actions">
                                     <a className="delete-btn" onClick={() => { handleDelete(comment.id) }}>
                                         <img src="/images/icon-delete.svg" alt="reply" />
