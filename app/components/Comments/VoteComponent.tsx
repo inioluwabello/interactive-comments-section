@@ -18,7 +18,9 @@ const VoteComponent = ({ originalCommentId, votes, commentId }: VoteComponentPro
                         commentId, 
                         value: 1 
                     })) 
-                }}>+</a>
+                }}>
+                    <img src="/images/icon-minus.svg" alt="minus" />
+                </a>
             <span className="vote-item vote-score">{votes}</span>
             <a className="vote-item text-center vote-action" 
                 onClick={() => { 
@@ -27,7 +29,9 @@ const VoteComponent = ({ originalCommentId, votes, commentId }: VoteComponentPro
                         commentId, 
                         value: -1 
                     })) 
-                }}>-</a>
+                }}>
+                    <img src="/images/icon-plus.svg" alt="plus" />
+                </a>
         </div>
     )
 }
