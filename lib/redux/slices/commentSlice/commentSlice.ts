@@ -197,6 +197,9 @@ export const commentSlice = createSlice({
       state.comments.push(comment)
       return;
     },
+    setSavedComments: (state, action: PayloadAction<IComment[]>) => {
+      state.comments = action.payload;
+    }
   },
 })
 

@@ -1,15 +1,16 @@
 'use client';
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import CommentItem from "./CommentItem"
 import { IComment, commentSlice, selectComments, selectCurrentUser, useDispatch, useSelector } from "@/lib/redux";
 import { nanoid } from "@reduxjs/toolkit";
 
 const Comments = () => {
-    const comments = useSelector(selectComments)
-    const currentUser = useSelector(selectCurrentUser)
 
     const dispatch = useDispatch();
+    
+    const comments = useSelector(selectComments)
+    const currentUser = useSelector(selectCurrentUser)
     const [commentValue, setCommentValue] = useState("");
     
     const handleCommentsInput = (e: ChangeEvent<HTMLTextAreaElement>): void =>  {

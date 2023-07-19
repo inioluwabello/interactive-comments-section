@@ -11,9 +11,9 @@ interface CommentItemProp {
 
 const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemProp) => {
     const dispatch = useDispatch();
+    
     const [replyValue, setReplyValue] = useState("");
     const [editValue, setEditValue] = useState("");
-    
     const [replying, setReplying] = useState(false);
     const [editing, setEditing] = useState(false);
     
@@ -53,12 +53,12 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                         <div className="space-between">
                             <div className="comment-info">
                                 <div className="flex">
-                                    <img src={comment.user.image.png} alt="user" className="user-image" />
-                                    <div className="username">{comment.user.username}</div>
+                                    <img src={comment.user.image.png} alt="user" className="comment-info-item user-image" />
+                                    <div className="comment-info-item username bold">{comment.user.username}</div>
                                     {currentUser && comment.user.username === currentUser.username &&
-                                        <div className="author">you</div>
+                                        <div className="comment-info-item author">you</div>
                                     }
-                                    <div className="time">{comment.createdAt}</div>
+                                    <div className="comment-info-item time">{comment.createdAt}</div>
                                 </div>
                             </div>
 
@@ -90,8 +90,8 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                         </div>
 
                         {!editing && <div className="content">{comment.content}</div>}
-                        {editing && <div className="edit-box">
-                            <textarea className="edit-area" value={editValue} onChange={handleEditInput}></textarea>
+                        {editing && <div className="edit-box space-between">
+                            <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
                             <button className="btn pry-bg" 
                                 onClick={() => { 
                                     dispatch(commentSlice.actions.update({

@@ -11,7 +11,7 @@ const VoteComponent = ({ originalCommentId, votes, commentId }: VoteComponentPro
     const dispatch = useDispatch();
     return (
         <div className="vote-box-inner">
-            <a className="vote-action" 
+            <a className="vote-item text-center vote-action" 
                 onClick={() => { 
                     dispatch(commentSlice.actions.handleScoreUpdate({ 
                         originalCommentId, 
@@ -19,8 +19,8 @@ const VoteComponent = ({ originalCommentId, votes, commentId }: VoteComponentPro
                         value: 1 
                     })) 
                 }}>+</a>
-            <span className="vote-action">{votes}</span>
-            <a className="vote-action" 
+            <span className="vote-item vote-score">{votes}</span>
+            <a className="vote-item text-center vote-action" 
                 onClick={() => { 
                     dispatch(commentSlice.actions.handleScoreUpdate({ 
                         originalCommentId, 
