@@ -16,6 +16,18 @@ const Comments = () => {
         setCommentValue(e.target.value)
     }
 
+    const handleSend = () => {
+        dispatch(commentSlice.actions.addComment({
+            content: commentValue,
+            createdAt: Date.now().toString(),
+            id: nanoid(),
+            score: 0,
+            user: currentUser,
+            replies: []
+        }))
+        setCommentValue("");
+    }
+
     return (
         <main className="main">
             {comments && comments.map((comment: IComment) => {
@@ -33,13 +45,7 @@ const Comments = () => {
                     className="comment-input"
                     value={commentValue}
                     onChange={handleCommentsInput}></textarea>
-                <button className="btn pry-bg" onClick={() => {dispatch(commentSlice.actions.addComment({
-                    content: commentValue,
-                    createdAt: Date.now().toLocaleString(),
-                    id: nanoid(),
-                    score: 0,
-                    user: currentUser,
-                }))}}>SEND</button>
+                <button className="btn pry-bg" onClick={handleSend}>SEND</button>
             </div>}
         </main>
     )

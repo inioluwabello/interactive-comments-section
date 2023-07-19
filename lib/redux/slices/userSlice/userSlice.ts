@@ -25,7 +25,7 @@ export const userSlice = createSlice({
 
 /* Types */
 export interface UserSliceState {
-  currentUser?: IUser,
+  currentUser: IUser,
   status: 'idle' | 'loading' | 'failed'
 }
 

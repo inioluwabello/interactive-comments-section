@@ -1,18 +1,33 @@
 import { commentSlice, useDispatch } from "@/lib/redux";
 
 interface VoteComponentProps {
-    votes: number,
+    votes: number
     commentId: string
+    originalCommentId?: string
 }
 
-const VoteComponent = ({ votes, commentId }: VoteComponentProps) => {
+const VoteComponent = ({ originalCommentId, votes, commentId }: VoteComponentProps) => {
 
     const dispatch = useDispatch();
     return (
         <div className="vote-box-inner">
-            <a className="vote-action" onClick={() => { dispatch(commentSlice.actions.incrementScore(commentId)) }}>+</a>
+            <a className="vote-action" 
+                onClick={() => { 
+                    dispatch(commentSlice.actions.handleScoreUpdate({ 
+                        originalCommentId, 
+                        commentId, 
+                        value: 1 
+                    })) 
+                }}>+</a>
             <span className="vote-action">{votes}</span>
-            <a className="vote-action" onClick={() => { dispatch(commentSlice.actions.decrementScore(commentId)) }}>-</a>
+            <a className="vote-action" 
+                onClick={() => { 
+                    dispatch(commentSlice.actions.handleScoreUpdate({ 
+                        originalCommentId, 
+                        commentId, 
+                        value: -1 
+                    })) 
+                }}>-</a>
         </div>
     )
 }

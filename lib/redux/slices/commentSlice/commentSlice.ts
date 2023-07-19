@@ -3,6 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 /* Instruments */
 import { IUser } from '../..'
+import { WritableDraft } from 'immer/dist/internal'
 
 const initialState: CommentSliceState = {
   comments: [
@@ -39,6 +40,7 @@ const initialState: CommentSliceState = {
           createdAt: '1 week ago',
           score: 4,
           replyingTo: 'maxblagun',
+          replies: [],
           user: {
             image: { 
               png: './images/avatars/image-ramsesmiron.png',
@@ -53,6 +55,7 @@ const initialState: CommentSliceState = {
           createdAt: "2 days ago",
           score: 2,
           replyingTo: "ramsesmiron",
+          replies: [],
           user: {
             image: { 
               png: "./images/avatars/image-juliusomo.png",
@@ -74,26 +77,125 @@ export const commentSlice = createSlice({
     setComments: (state, action: PayloadAction<IComment[]>) => {
       state.comments = action.payload
     },
-    incrementScore: (state, action: PayloadAction<string>) => {
-      
+    handleScoreUpdate: (state, action: PayloadAction<any>) => {
+      const originalCommentId = action.payload.originalCommentId;
+      const commentId = action.payload.commentId;
+      const value = action.payload.value;
+
+      // If searching within comments use original comment Id to search
+      if (!originalCommentId) {
+        const comment = state.comments.find((item: IComment) => item.id === commentId);
+        if (!comment) return;
+
+        const commentIndex = state.comments.indexOf(comment);
+        state.comments[commentIndex].score += value;
+      }
+      else {
+        const comment = state.comments.find((item: IComment) => item.id === originalCommentId);
+        if (!comment) return;
+
+        const reply = comment.replies?.find((item: IComment) => item.id === commentId)
+        if (reply && comment.replies) {
+          const commentIndex = state.comments.indexOf(comment);
+          const replyIndex = comment.replies?.indexOf(reply);
+          state.comments[commentIndex].replies![replyIndex].score += value;
+        }
+      }
     },
-    decrementScore: (state, action: PayloadAction<string>) => {
-      
-    },
-    reply: (state, action: PayloadAction<string>) => {
-      state.replyingto = action.payload
+    addReply: (state, action: PayloadAction<IReply>) => {
+      const item = action.payload;
+
+      // check first level comments first
+      // find comment and push into replies
+      const comment = state.comments.find(c =>  c.id === item.commentId)
+      if (comment) {
+        const commentIndex = state.comments.indexOf(comment);
+        state.comments[commentIndex].replies?.push(item.comment);
+        return;
+      }
+
+      // if not replying a comment, must be replying a reply
+      // for each comment, check their replies for commentId
+      for (let i = 0; i < state.comments.length; i++) {
+        if (state.comments[i].replies) {
+          const reply = state.comments[i].replies!.find(r =>  r.id === item.commentId)
+          if (reply) {
+            const replyIndex = state.comments[i].replies!.indexOf(reply);
+            state.comments[i].replies![replyIndex].replies?.push(item.comment)
+            return;
+          }
+        }
+      }
     },
     delete: (state, action: PayloadAction<string>) => {
-      
-    },
-    edit: (state, action: PayloadAction<string>) => {
-      
+      const item = action.payload;
+ 
+      // check first level comments first
+      const comment = state.comments.find(c =>  c.id === item)
+      if (comment) {
+        const commentIndex = state.comments.indexOf(comment);
+        state.comments.splice(commentIndex, 1);
+        return;
+      }
+
+      // checking first level replies
+      for (let i = 0; i < state.comments.length; i++) {
+        const reply = state.comments[i].replies.find(r => r.id === item);
+        if (reply) {
+          const replyIndex = state.comments[i].replies.indexOf(reply);
+          state.comments[i].replies.splice(replyIndex, 1)
+          return;
+        }
+
+        // checking second level
+        state.comments[i].replies.forEach(replyItems => {
+          if (replyItems.replies && replyItems.replies.length > 0) {
+            const reply = replyItems.replies.find(r => r.id === item);
+            if (reply) {
+              const replyIndex = replyItems.replies.indexOf(reply);
+              replyItems.replies.splice(replyIndex, 1);
+              return;
+            }
+          }
+        });
+      }
     },
     update: (state, action: PayloadAction<IComment>) => {
-      
+      const item = action.payload
+      // check first level comments first
+      const comment = state.comments.find(c => c.id == item.id)
+      if (comment) {
+        const commentIndex = state.comments.indexOf(comment);
+        state.comments[commentIndex].content = item.content
+        return;
+      }
+
+      // check replies
+      for(let i = 0; i < state.comments.length; i++) {
+        const reply = state.comments[i].replies.find(r => r.id === item.id);
+        if (reply) {
+          const replyIndex = state.comments[i].replies.indexOf(reply);
+          state.comments[i].replies[replyIndex].content = item.content;
+          return;
+        }
+
+        
+        state.comments[i].replies.forEach(replyItems => {
+          if (replyItems.replies && replyItems.replies.length > 0) {
+            const reply = replyItems.replies.find(r => r.id === item.id);
+            if (reply) {
+              const replyIndex = replyItems.replies.indexOf(reply);
+              replyItems.replies[replyIndex].content = item.content;
+              return;
+            }
+          }
+        });
+      }
     },
     addComment: (state, action: PayloadAction<IComment>) => {
-      
+      const comment = action.payload;
+      state.comments.push(comment)
+      return;
     },
   },
 })
@@ -112,5 +214,10 @@ export interface IComment {
   replyingTo?: string;
   score: number;
   user: IUser;
-  replies?: IComment[]
+  replies: IComment[]
+}
+
+export interface IReply {
+  commentId: string
+  comment: IComment
 }
