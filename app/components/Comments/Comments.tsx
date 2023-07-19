@@ -21,7 +21,7 @@ const Comments = () => {
         if (commentValue.length > 0)
             dispatch(commentSlice.actions.addComment({
                 content: commentValue,
-                createdAt: Date.now().toString(),
+                createdAt: new Date().toISOString(),
                 id: nanoid(),
                 score: 0,
                 user: currentUser,

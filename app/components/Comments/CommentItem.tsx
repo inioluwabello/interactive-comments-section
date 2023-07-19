@@ -2,6 +2,7 @@ import {IComment, IUser, commentSlice, useDispatch } from "@/lib/redux";
 import VoteComponent from "./VoteComponent"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { nanoid } from "@reduxjs/toolkit";
+import TimeAgo from "../TimeAgo";
 
 interface CommentItemProp {
     originalCommentId?: string
@@ -33,7 +34,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                 commentId: comment.id,
                 comment: {
                     content: replyValue,
-                    createdAt: Date.now().toString(),
+                    createdAt: new Date().toISOString(),
                     id: nanoid(),
                     score: 0,
                     user: currentUser,
@@ -66,7 +67,9 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                                     {currentUser && comment.user.username === currentUser.username &&
                                         <div className="comment-info-item author">you</div>
                                     }
-                                    <div className="comment-info-item time">{comment.createdAt}</div>
+                                    <div className="comment-info-item time">
+                                        <TimeAgo timestamp={comment.createdAt} />
+                                    </div>
                                 </div>
                             </div>
 
@@ -98,21 +101,23 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                         </div>
 
                         {!editing && <div className="content">{comment.content}</div>}
-                        {editing && <div className="desktop edit-box space-between">
-                            <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
-                            <button className="btnn pry-bg" 
-                                onClick={() => { 
-                                    dispatch(commentSlice.actions.update({
-                                        content: editValue,
-                                        createdAt: comment.createdAt,
-                                        id: comment.id,
-                                        score: comment.score,
-                                        user: comment.user,
-                                        replies: comment.replies,
-                                        replyingTo: comment.replyingTo
-                                    }));
-                                    setEditing(false) 
-                                }}>UPDATE</button>
+                        {editing && <div className="desktop">
+                            <div className="edit-box space-between">
+                                <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
+                                <button className="btnn pry-bg" 
+                                    onClick={() => { 
+                                        dispatch(commentSlice.actions.update({
+                                            content: editValue,
+                                            createdAt: comment.createdAt,
+                                            id: comment.id,
+                                            score: comment.score,
+                                            user: comment.user,
+                                            replies: comment.replies,
+                                            replyingTo: comment.replyingTo
+                                        }));
+                                        setEditing(false) 
+                                    }}>UPDATE</button>
+                            </div>
                         </div>}
 
                         {editing && <div className="mobile edit-box">
@@ -172,16 +177,18 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
             </div>
 
             {/* Reply box */}
-            {replying && currentUser && <div className="desktop comment-box space-between">
-                <img src={currentUser.image.png} alt="user" className="user-image" />
-                <textarea 
-                    name="comment-input" 
-                    id="comment-input" 
-                    placeholder="Add a comment..."
-                    className="comment-input"
-                    value={replyValue}
-                    onChange={handleReplyInput}></textarea>
-                <button className="btnn pry-bg" onClick={handleReply}>REPLY</button>
+            {replying && currentUser && <div className="desktop">
+                <div className="comment-box space-between">
+                    <img src={currentUser.image.png} alt="user" className="user-image" />
+                    <textarea 
+                        name="comment-input" 
+                        id="comment-input" 
+                        placeholder="Add a comment..."
+                        className="comment-input"
+                        value={replyValue}
+                        onChange={handleReplyInput}></textarea>
+                    <button className="btnn pry-bg" onClick={handleReply}>REPLY</button>
+                </div>
             </div>}
 
             {replying && currentUser && <div className="mobile comment-box">
