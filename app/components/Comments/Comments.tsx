@@ -18,14 +18,15 @@ const Comments = () => {
     }
 
     const handleSend = () => {
-        dispatch(commentSlice.actions.addComment({
-            content: commentValue,
-            createdAt: Date.now().toString(),
-            id: nanoid(),
-            score: 0,
-            user: currentUser,
-            replies: []
-        }))
+        if (commentValue.length > 0)
+            dispatch(commentSlice.actions.addComment({
+                content: commentValue,
+                createdAt: Date.now().toString(),
+                id: nanoid(),
+                score: 0,
+                user: currentUser,
+                replies: []
+            }))
         setCommentValue("");
     }
     
@@ -53,7 +54,8 @@ const Comments = () => {
                 )
             })}
 
-            {currentUser && <div className="comment-box space-between">
+            {/* Desktop: last comment box */}
+            {currentUser && <div className="desktop comment-box space-between">
                 <img src={currentUser.image.png} alt="user" className="user-image" />
                 <textarea 
                     name="comment-input" 
@@ -63,6 +65,21 @@ const Comments = () => {
                     value={commentValue}
                     onChange={handleCommentsInput}></textarea>
                 <button className="btnn pry-bg" onClick={handleSend}>SEND</button>
+            </div>}
+
+            {/* Mobile: Last comment box */}
+            {currentUser && <div className="mobile comment-box">
+                <textarea 
+                    name="comment-input" 
+                    id="comment-input" 
+                    placeholder="Add a comment..."
+                    className="comment-input"
+                    value={commentValue}
+                    onChange={handleCommentsInput}></textarea>
+                <div className="space-between mt-1">
+                    <img src={currentUser.image.png} alt="user" className="user-image" />
+                    <button className="btnn pry-bg" onClick={handleSend}>SEND</button>
+                </div>
             </div>}
 
             {showingModal && <div className="modal-overlay">

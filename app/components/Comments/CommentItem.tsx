@@ -28,18 +28,19 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
     }
 
     const handleReply = () => {
-        dispatch(commentSlice.actions.addReply({
-            commentId: comment.id,
-            comment: {
-                content: replyValue,
-                createdAt: Date.now().toString(),
-                id: nanoid(),
-                score: 0,
-                user: currentUser,
-                replyingTo: comment.user.username,
-                replies: []
-            },
-        }))
+        if (replyValue.length > 0)
+            dispatch(commentSlice.actions.addReply({
+                commentId: comment.id,
+                comment: {
+                    content: replyValue,
+                    createdAt: Date.now().toString(),
+                    id: nanoid(),
+                    score: 0,
+                    user: currentUser,
+                    replyingTo: comment.user.username,
+                    replies: []
+                },
+            }))
         setReplyValue("");
         setReplying(false);
     }
@@ -53,7 +54,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
         <>
             <div className="comment">
                 <div className="space-between">
-                    <div className="vote-box">
+                    <div className="desktop vote-box">
                         <VoteComponent votes={comment.score} commentId={comment.id} originalCommentId={originalCommentId} />
                     </div>
                     <div className="comment-area">
@@ -70,7 +71,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                             </div>
 
                             {/* Reply, Edit & Delete buttons */}
-                            <div className="comment-actions">
+                            <div className="desktop comment-actions">
                                 {currentUser && comment.user.username !== currentUser.username && 
                                 <a className="reply-btn" onClick={() => { 
                                     setReplying(true)
@@ -112,14 +113,47 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                                     }));
                                     setEditing(false) 
                                 }}>UPDATE</button>
+                        </div>}
+                    </div>
+                </div>
+                
+                <div className="mobile mobile-actions">
+                    <div className="space-between">
+                        <div className="vote-box">
+                            <VoteComponent votes={comment.score} commentId={comment.id} originalCommentId={originalCommentId} />
                         </div>
-                        }
 
+                        {/* Mobile: Reply, Edit & Delete buttons */}
+                        <div className="comment-actions">
+                            {currentUser && comment.user.username !== currentUser.username &&
+                                <a className="reply-btn" onClick={() => {
+                                    setReplying(true)
+                                }}>
+                                    <img src="/images/icon-reply.svg" alt="reply" />
+                                    Reply
+                                </a>
+                            }
+
+                            {currentUser && comment.user.username === currentUser.username &&
+                                <div className="crud-actions">
+                                    <a className="delete-btn" onClick={() => { handleDelete(comment.id) }}>
+                                        <img src="/images/icon-delete.svg" alt="reply" />
+                                        Delete
+                                    </a>
+
+                                    <a className="edit-btn" onClick={() => { setEditing(true); setEditValue(comment.content) }}>
+                                        <img src="/images/icon-edit.svg" alt="reply" />
+                                        Edit
+                                    </a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {replying && currentUser && <div className="comment-box space-between">
+            {/* Reply box */}
+            {replying && currentUser && <div className="desktop comment-box space-between">
                 <img src={currentUser.image.png} alt="user" className="user-image" />
                 <textarea 
                     name="comment-input" 
@@ -131,6 +165,21 @@ const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal,
                 <button className="btnn pry-bg" onClick={handleReply}>REPLY</button>
             </div>}
 
+            {replying && currentUser && <div className="mobile comment-box">
+                <textarea 
+                    name="comment-input" 
+                    id="comment-input" 
+                    placeholder="Add a comment..."
+                    className="comment-input"
+                    value={replyValue}
+                    onChange={handleReplyInput}></textarea>
+                <div className="space-between mt-1">
+                    <img src={currentUser.image.png} alt="user" className="user-image" />
+                    <button className="btnn pry-bg" onClick={handleReply}>REPLY</button>
+                </div>
+            </div>}
+
+            {/* Reply Items */}
             {comment.replies && <div className="reply-box">
                 {comment.replies.map((reply: IComment) => {
                     return <CommentItem 

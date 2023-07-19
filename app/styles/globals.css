@@ -63,6 +63,7 @@ main.main {
   margin-top: -0.5em;
   margin-bottom: 0.5em;
   padding: 1em;
+  border-radius: 5px;
 }
 .comment-box:last-of-type {
   margin-top: 1em;
@@ -224,4 +225,38 @@ main.main {
 }
 .btn-red {
   background: var(--soft-red)
+}
+.desktop {
+  display: block;
+}
+.mobile {
+  display: none;
+}
+@media (max-width: 600px) {
+  .reply-box {
+    margin-left: 10px;
+  }
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+  main.main {
+    width: 100%;
+    padding: 1em;
+  }
+  .vote-item {
+    display: inline-block;
+  }
+  .mobile-actions {
+    margin-top: 1em;
+  }
+  .mt-1 {
+    margin-top: 1em;
+  }
+  .comment-input {
+    margin-right: unset;
+    margin-left: unset;
+  }
 }
