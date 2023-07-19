@@ -1,6 +1,10 @@
 import { parseISO, formatDistanceToNow } from 'date-fns'
 
-const TimeAgo = ({ timestamp }) => {
+interface TimeAgoProps {
+  timestamp: string
+}
+
+const TimeAgo = ({ timestamp }: TimeAgoProps) => {
   let timeAgo = ''
   try{
     if (timestamp) {
@@ -14,7 +18,7 @@ const TimeAgo = ({ timestamp }) => {
 
   return (
     <span title={timestamp}>
-      &nbsp; <i>{timeAgo}</i>
+      {" "}{timeAgo}
     </span>
   )
 }
