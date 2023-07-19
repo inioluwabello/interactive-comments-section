@@ -55,16 +55,19 @@ const Comments = () => {
             })}
 
             {/* Desktop: last comment box */}
-            {currentUser && <div className="desktop comment-box space-between">
-                <img src={currentUser.image.png} alt="user" className="user-image" />
-                <textarea 
-                    name="comment-input" 
-                    id="comment-input" 
-                    placeholder="Add a comment..."
-                    className="comment-input"
-                    value={commentValue}
-                    onChange={handleCommentsInput}></textarea>
-                <button className="btnn pry-bg" onClick={handleSend}>SEND</button>
+            {currentUser && 
+            <div className="desktop">
+                <div className="comment-box space-between">
+                    <img src={currentUser.image.png} alt="user" className="user-image" />
+                    <textarea 
+                        name="comment-input" 
+                        id="comment-input" 
+                        placeholder="Add a comment..."
+                        className="comment-input"
+                        value={commentValue}
+                        onChange={handleCommentsInput}></textarea>
+                    <button className="btnn pry-bg" onClick={handleSend}>SEND</button>
+                </div>
             </div>}
 
             {/* Mobile: Last comment box */}
