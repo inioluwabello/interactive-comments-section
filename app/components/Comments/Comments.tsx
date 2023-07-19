@@ -28,12 +28,28 @@ const Comments = () => {
         }))
         setCommentValue("");
     }
+    
+    const [showingModal, setShowingModal] = useState(false);
+    const [deleteId, setDeleteId] = useState("");
+
+    const handleClose = () => setShowingModal(false);
+    const handleDelete = () => {
+        dispatch(commentSlice.actions.delete(deleteId))
+        setDeleteId("");
+        setShowingModal(false);
+    }
 
     return (
         <main className="main">
             {comments && comments.map((comment: IComment) => {
                 return (
-                    <CommentItem key={comment.id} comment={comment} currentUser={currentUser} />
+                    <CommentItem 
+                        key={comment.id} 
+                        comment={comment} 
+                        currentUser={currentUser}
+                        setShowingModal={setShowingModal}
+                        setDeleteId={setDeleteId}
+                         />
                 )
             })}
 
@@ -46,7 +62,23 @@ const Comments = () => {
                     className="comment-input"
                     value={commentValue}
                     onChange={handleCommentsInput}></textarea>
-                <button className="btn pry-bg" onClick={handleSend}>SEND</button>
+                <button className="btnn pry-bg" onClick={handleSend}>SEND</button>
+            </div>}
+
+            {showingModal && <div className="modal-overlay">
+                <div className="modal-content">
+                    <div className="modal-header bold">Delete commment</div>
+                    <div className="modal-body">
+                        Are you sure you want to delete this comment?
+                        This will remove the comment and can't be undone.
+                    </div>
+                    <div className="footer">
+                        <div className="space-between">
+                            <button onClick={handleClose} className="btnn btn-grey">NO, CANCEL</button>
+                            <button onClick={handleDelete} className="btnn btn-red">YES, DELETE</button>
+                        </div>
+                    </div>
+                </div>
             </div>}
         </main>
     )

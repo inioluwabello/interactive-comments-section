@@ -1,15 +1,17 @@
 import {IComment, IUser, commentSlice, useDispatch } from "@/lib/redux";
 import VoteComponent from "./VoteComponent"
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 
 interface CommentItemProp {
     originalCommentId?: string
     comment: IComment
     currentUser: IUser
+    setShowingModal: Dispatch<SetStateAction<boolean>>
+    setDeleteId: Dispatch<SetStateAction<string>>
 }
 
-const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemProp) => {
+const CommentItem = ({ originalCommentId, comment, currentUser, setShowingModal, setDeleteId }: CommentItemProp) => {
     const dispatch = useDispatch();
     
     const [replyValue, setReplyValue] = useState("");
@@ -40,6 +42,11 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
         }))
         setReplyValue("");
         setReplying(false);
+    }
+
+    const handleDelete = (id:string) => {
+        setShowingModal(true);
+        setDeleteId(id)
     }
 
     return (
@@ -75,7 +82,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                                 
                                 {currentUser && comment.user.username === currentUser.username && 
                                 <div className="crud-actions">
-                                    <a className="delete-btn" onClick={() => { dispatch(commentSlice.actions.delete(comment.id)) }}>
+                                    <a className="delete-btn" onClick={() => { handleDelete(comment.id) }}>
                                         <img src="/images/icon-delete.svg" alt="reply" />
                                         Delete
                                     </a>
@@ -92,7 +99,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                         {!editing && <div className="content">{comment.content}</div>}
                         {editing && <div className="edit-box space-between">
                             <textarea className="comment-input edit-area" value={editValue} onChange={handleEditInput}></textarea>
-                            <button className="btn pry-bg" 
+                            <button className="btnn pry-bg" 
                                 onClick={() => { 
                                     dispatch(commentSlice.actions.update({
                                         content: editValue,
@@ -121,7 +128,7 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                     className="comment-input"
                     value={replyValue}
                     onChange={handleReplyInput}></textarea>
-                <button className="btn pry-bg" onClick={handleReply}>REPLY</button>
+                <button className="btnn pry-bg" onClick={handleReply}>REPLY</button>
             </div>}
 
             {comment.replies && <div className="reply-box">
@@ -130,7 +137,10 @@ const CommentItem = ({ originalCommentId, comment, currentUser }: CommentItemPro
                         key={reply.id} 
                         comment={reply} 
                         originalCommentId={comment.id}
-                        currentUser={currentUser} />
+                        currentUser={currentUser}
+                        setShowingModal={setShowingModal}
+                        setDeleteId={setDeleteId}
+                    />
                 })}
             </div>}
         </>
